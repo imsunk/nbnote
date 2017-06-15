@@ -1,4 +1,4 @@
-/**
+package com.nbnote; /**
  * Created by K on 2017. 6. 13..
  */
 import javax.ws.rs.GET;
