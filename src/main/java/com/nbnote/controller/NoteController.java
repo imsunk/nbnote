@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
@@ -17,19 +16,21 @@ import java.util.ArrayList;
 @Path("/note")
 public class NoteController extends BaseController{
     private static Logger LOG = LoggerFactory.getLogger(NoteController.class);
-    private static NoteService noteService = new NoteService();
-    @GET
-    @Path("/{param}")
-    public Response getMsg(@PathParam("param") String msg) {
+    private  NoteService noteService = new NoteService();
 
+    @PUT
+    @Consumes("application/json")
+    public Response writeNote(Note note){
+        noteService.writeNode(note);
         return Response.ok().build();
     }
 
     @GET
+    @Path("/{param}")
     @Produces("application/json")
-    public ArrayList<Note> getNote(@PathParam("id") String id){
-        ArrayList<Note> noteList = new ArrayList();
-        noteList = noteService.getNote(id);
+    public ArrayList<Note> getNote(@PathParam("param") String id){
+        ArrayList<Note> noteList;
+        noteList = noteService.getAllNote(id);
 
         return noteList;
 

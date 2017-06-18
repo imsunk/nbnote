@@ -13,11 +13,12 @@ public class DbHandler {
     private static DbHandler instance;
     private BasicDataSource bds;
 
-    public DbHandler() {
+    private DbHandler() {
         Configuration conf = Configuration.getInstance();
+
         bds = new BasicDataSource();
-        bds.setDriverClassName(conf.getConf("db.nbnote.drivers"));
-        bds.setUrl(conf.getConf("db.ngnote.host"));
+        bds.setDriverClassName("com.mysql.jdbc.Drivers");
+        bds.setUrl(conf.getConf("db.nbnote.host"));
         bds.setUsername(conf.getConf("db.nbnote.uname"));
         bds.setPassword(conf.getConf("db.nbnote.passwd"));
         bds.setMaxTotal(Integer.parseInt(conf.getConf("db.nbnote.maxConn")));
@@ -29,18 +30,13 @@ public class DbHandler {
     public static DbHandler getInstance() {
         if (instance == null) {
             synchronized (DbHandler.class) {
-                DbHandler inst = instance;
-                if (inst == null) {
-                    synchronized (DbHandler.class) {
-                        instance = new DbHandler();
-                    }
-                }
+                instance = new DbHandler();
             }
         }
         return instance;
     }
 
-    public Connection getConnection(String name) {
+    public Connection getConnection() {
         try {
             return bds.getConnection();
         } catch (SQLException e) {
