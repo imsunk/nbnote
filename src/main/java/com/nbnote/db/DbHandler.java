@@ -17,7 +17,7 @@ public class DbHandler {
         Configuration conf = Configuration.getInstance();
 
         bds = new BasicDataSource();
-        bds.setDriverClassName("com.mysql.jdbc.Drivers");
+        bds.setDriverClassName("com.mysql.jdbc.Driver");
         bds.setUrl(conf.getConf("db.nbnote.host"));
         bds.setUsername(conf.getConf("db.nbnote.uname"));
         bds.setPassword(conf.getConf("db.nbnote.passwd"));

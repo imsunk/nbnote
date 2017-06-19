@@ -1,8 +1,11 @@
 package com.nbnote.log;
 
 import com.nbnote.conf.Configuration;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +22,8 @@ public class LoggerLoader {
         Properties logProperties = new Properties();
         InputStream stream = null;
         try {
-            stream = LoggerLoader.class.getClassLoader().getResourceAsStream(Configuration.LOG_CONF_FILE);
+            //stream = LoggerLoader.class.getClassLoader().getResourceAsStream("conf/"+Configuration.LOG_CONF_FILE);
+            stream = new FileInputStream("conf/"+Configuration.LOG_CONF_FILE);
             logProperties.load(stream);
         } catch (FileNotFoundException e) {
             LOG.error(e.getMessage(), e);
@@ -34,6 +38,7 @@ public class LoggerLoader {
                 }
             }
         }
+        PropertyConfigurator.configure(logProperties);
     }
 
 }
