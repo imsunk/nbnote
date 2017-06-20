@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public class NoteController extends BaseController{
 
     @GET
     @Path("/{param}")
-    @Produces("application/json")
+    @Produces(MediaType.APPLICATION_JSON)
     public ArrayList<Note> getNote(@PathParam("param") String id){
         ArrayList<Note> noteList;
         noteList = noteService.getAllNote(id);

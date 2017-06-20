@@ -1,9 +1,11 @@
 package com.nbnote.conf;
 
 import com.nbnote.log.LoggerLoader;
+import jdk.internal.util.xml.impl.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletContext;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,13 +16,11 @@ import java.util.Properties;
  * Created by K on 2017. 6. 15..
  */
 public class Configuration {
-
     private static Logger LOG = LoggerFactory.getLogger(Configuration.class);
     private static final String CONF_FILE = "nbnote.conf";
     public static final String LOG_CONF_FILE = "log4j.conf";
     private static Properties properties = new Properties();
     private static Configuration instance = null;
-
     /*
     private static class LazyHolder {
         private static final Configuration INSTANCE = new Configuration();
@@ -40,10 +40,8 @@ public class Configuration {
     }
 
     public void load(){
-        //InputStream stream = this.getClass().getClassLoader().getResourceAsStream("conf/"+Configuration.CONF_FILE);
-        InputStream stream = null;
         try {
-            stream = new FileInputStream("conf/"+ Configuration.CONF_FILE);
+            InputStream stream =  new FileInputStream("conf/"+Configuration.CONF_FILE);
             properties.load(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
