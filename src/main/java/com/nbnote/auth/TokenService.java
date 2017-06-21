@@ -9,6 +9,7 @@ import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -65,10 +66,13 @@ public class TokenService {
 
 
     private void insertToken(Token token) throws Exception {
-        StringBuilder query = new StringBuilder("INSERT INTO token (id, token, expire_date, gen_date) values (?,?,?,?)");
+        StringBuilder query = new StringBuilder("INSERT INTO api_token (id, token, expire_date, gen_date) values (?,?,?,?)");
         ptmt = conn.prepareStatement(query.toString());
         ptmt.setString(1,token.getUserId());
-        ptmt.executeQuery();
+        ptmt.setString(2,token.getToken());
+        ptmt.setTimestamp(3, new java.sql.Timestamp(token.getExpireDate().getTime()));
+        ptmt.setTimestamp(4, new java.sql.Timestamp(token.getGenDate().getTime()));
+        ptmt.executeUpdate();
 
         ptmt.close();
     }

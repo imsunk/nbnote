@@ -14,14 +14,13 @@ public class DbHandler {
     private BasicDataSource bds;
 
     private DbHandler() {
-        Configuration conf = Configuration.getInstance();
+        //Configuration conf = Configuration.getInstance();
 
         bds = new BasicDataSource();
-        bds.setDriverClassName("com.mysql.jdbc.Drivers");
-        bds.setUrl(conf.getConf("db.nbnote.host"));
-        bds.setUsername(conf.getConf("db.nbnote.uname"));
-        bds.setPassword(conf.getConf("db.nbnote.passwd"));
-        bds.setMaxTotal(Integer.parseInt(conf.getConf("db.nbnote.maxConn")));
+        bds.setDriverClassName("com.mysql.jdbc.Driver");
+        bds.setUrl("jdbc:mysql://webzook.net:3306/nbnote");
+        bds.setUsername("smile2x");
+        bds.setPassword("0173");
         bds.setValidationQuery("SELECT 1");     //isValid오류 방지
         bds.setTestOnBorrow(false);             //pool에 넣을 때 검증 여부
         bds.setPoolPreparedStatements(true);    //쿼리 파싱부하 감소

@@ -18,35 +18,31 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NoteService extends Service{
     private static final Logger logger = LoggerFactory.getLogger(NoteService.class);
-    //private ConcurrentHashMap<Integer, Note> note = new ConcurrentHashMap<Integer, Note>();
-    private AtomicInteger maxId = new AtomicInteger(0);
 
     public ArrayList<Note> getAllNote(String id){
        ArrayList<Note>  notes = new ArrayList<Note>();
-       StringBuilder query = new StringBuilder("select * from note where user='?'");
-        Connection con = conn.getConnection();
-        ResultSet rs = null;
-        try {
+       StringBuilder query = new StringBuilder("select * from note where writer=?");
+       Connection con = conn.getConnection();
+       ResultSet rs = null;
+       try {
             PreparedStatement ptmt = con.prepareStatement(query.toString());
-            ptmt.setString(1,id);
-            rs = ptmt.executeQuery(query.toString());
+            ptmt.setString(1, id);
+            rs = ptmt.executeQuery();
             while(rs.next()) {
                 Note note = new Note();
                 note.setTitle(rs.getString(2));
                 note.setWriter(rs.getString(3));
                 note.setWriteDate(rs.getString(4));
                 note.setWeather(rs.getString(5));
-                note.setWriteDate(rs.getString(6));
-                note.setTemperature(rs.getString(7));
-                note.setPlace(rs.getString(8));
-                note.setContent(rs.getString(9));
-                note.setConsumeTitle(rs.getString(10));
-                note.setIncomeTitle(rs.getString(11));
-                note.setConsume(rs.getString(12));
-                note.setIncome(rs.getString(13));
+                note.setTemperature(rs.getString(6));
+                note.setPlace(rs.getString(7));
+                note.setContent(rs.getString(8));
+                note.setConsumeTitle(rs.getString(9));
+                note.setIncomeTitle(rs.getString(10));
+                note.setConsume(rs.getString(11));
+                note.setIncome(rs.getString(12));
                 notes.add(note);
             }
-
         } catch (SQLException e) {
             logger.debug(e.getMessage());
         }
