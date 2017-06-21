@@ -6,6 +6,9 @@ package com.nbnote;
 public class Test {
     String title;
 
+    public Test(){
+
+    }
     public Test(String title, String name){
         this.title = title;
         this.name = name;

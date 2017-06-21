@@ -19,7 +19,7 @@ public class NoteController extends BaseController{
     private static Logger LOG = LoggerFactory.getLogger(NoteController.class);
     private  NoteService noteService = new NoteService();
 
-    @PUT
+    @POST
     @Consumes("application/json")
     public Response writeNote(Note note){
         noteService.writeNode(note);
@@ -27,14 +27,30 @@ public class NoteController extends BaseController{
     }
 
     @GET
-    @Path("/{param}")
+    @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Note> getNote(@PathParam("param") String id){
+    public ArrayList<Note> getNote(@PathParam("userId")String userId){
         ArrayList<Note> noteList;
-        noteList = noteService.getAllNote(id);
+        noteList = noteService.getAllNote(userId);
 
         return noteList;
-
     }
+
+    @PUT
+    @Path("{noteId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response modNote(Note note, @PathParam("noteId")int id) {
+        noteService.modNote(note,id);
+        return Response.ok().build();
+    }
+
+    @DELETE
+    @Path("{noteId}")
+    public Response deleteNote(@PathParam("noteId")int noteId){
+        noteService.deleteNote(noteId);
+
+        return Response.ok().build();
+    }
+
 
 }

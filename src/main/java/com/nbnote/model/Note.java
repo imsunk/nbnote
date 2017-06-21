@@ -1,15 +1,17 @@
 package com.nbnote.model;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * Created by K on 2017. 6. 14..
  */
 @Data
 public class Note {
-    private String id;
+    private int id;
     private String title;
     private String writer;
-    private String writeDate;
+    private Date writeDate;
     private String weather;
     private String temperature;
     private String place;
@@ -19,7 +21,24 @@ public class Note {
     private String incomeTitle;
     private String income;
 
-    public String getId() {
+    public Note() {
+    }
+
+    public Note(int id, String title, String writer, Date writeDate, String weather, String temperature, String place, String content, String consumeTitle, String consume, String incomeTitle, String income) {
+        this.id = id;
+        this.title = title;
+        this.writer = writer;
+        this.writeDate = writeDate;
+        this.weather = weather;
+        this.temperature = temperature;
+        this.place = place;
+        this.content = content;
+        this.consumeTitle = consumeTitle;
+        this.consume = consume;
+        this.incomeTitle = incomeTitle;
+        this.income = income;
+    }
+    public int getId() {
         return id;
     }
 
@@ -31,7 +50,7 @@ public class Note {
         return writer;
     }
 
-    public String getWriteDate() {
+    public Date getWriteDate() {
         return writeDate;
     }
 
@@ -67,7 +86,7 @@ public class Note {
         return income;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -79,7 +98,7 @@ public class Note {
         this.writer = writer;
     }
 
-    public void setWriteDate(String writeDate) {
+    public void setWriteDate(Date writeDate) {
         this.writeDate = writeDate;
     }
 
