@@ -40,7 +40,7 @@ public class NoteController extends BaseController{
     }
 
     @PUT
-    @Path("{noteId}")
+    @Path("{userId}/{noteId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response modNote(Note note, @PathParam("noteId")int id) {
         int result = noteService.modNote(note,id);
@@ -51,7 +51,7 @@ public class NoteController extends BaseController{
     }
 
     @DELETE
-    @Path("{noteId}")
+    @Path("{userId}/{noteId}")
     public Response deleteNote(@PathParam("noteId")int noteId){
         noteService.deleteNote(noteId);
 
