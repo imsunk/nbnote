@@ -1,6 +1,8 @@
 package com.nbnote.model;
 import lombok.Data;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -21,9 +23,8 @@ public class Note {
     private String incomeTitle;
     private String income;
 
-    public Note() {
+    public Note(){
     }
-
     public Note(int id, String title, String writer, Date writeDate, String weather, String temperature, String place, String content, String consumeTitle, String consume, String incomeTitle, String income) {
         this.id = id;
         this.title = title;
@@ -38,6 +39,7 @@ public class Note {
         this.incomeTitle = incomeTitle;
         this.income = income;
     }
+
     public int getId() {
         return id;
     }
@@ -54,7 +56,8 @@ public class Note {
         return writeDate;
     }
 
-    public String getWeather() {
+    public String getWeather()
+    {
         return weather;
     }
 

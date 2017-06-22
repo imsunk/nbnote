@@ -52,9 +52,9 @@ public class NoteService extends Service{
        return notes;
     }
 
-    public void writeNode(Note note) {
+    public int writeNode(Note note) {
         StringBuilder query = new StringBuilder("insert into note(title, writer, writeDate, weather, temperature, place, content, " +
-                "consumeTitle, incomeTitle, consume, income) values (?,?,?,?,?,?,?,?,?,?,?,?)" );
+                "consumeTitle, incomeTitle, consume, income) values (?,?,?,?,?,?,?,?,?,?,?)" );
         Connection con = conn.getConnection();
         PreparedStatement ptmt = null;
         try {
@@ -68,17 +68,19 @@ public class NoteService extends Service{
             ptmt.setString(7,note.getContent());
             ptmt.setString(8,note.getConsumeTitle());
             ptmt.setString(9,note.getIncomeTitle());
-            ptmt.setString(11,note.getConsume());
-            ptmt.setString(12,note.getIncome());
-            ptmt.executeQuery();
+            ptmt.setString(10,note.getConsume());
+            ptmt.setString(11,note.getIncome());
+            ptmt.executeUpdate();
         } catch (SQLException e) {
             logger.debug(e.getMessage());
+            return 1;
         }
+        return 0;
 
     }
 
-    public void modNote(Note note,int id) {
-        StringBuilder query = new StringBuilder("update note set title=?, place=?, content=?, consumeTitle=?, incomeTitle=?, income=?, consume=? WHERE id=? and writer=?");
+    public int modNote(Note note,int id) {
+        StringBuilder query = new StringBuilder("update note set title=?, place=?, content=?, consumeTitle=?, incomeTitle=?, income=?, consume=? WHERE id=?");
         Connection con = conn.getConnection();
         PreparedStatement ptmt = null;
         try {
@@ -91,12 +93,14 @@ public class NoteService extends Service{
             ptmt.setString(6,note.getIncome());
             ptmt.setString(7,note.getConsume());
             ptmt.setInt(8, id);
-            ptmt.setString(9,note.getWriter());
 
             ptmt.executeUpdate();
         } catch (SQLException e) {
             logger.debug(e.getMessage());
+            return 1;
         }
+
+        return 0;
     }
 
     public void deleteNote(int noteId){

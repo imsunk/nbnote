@@ -22,7 +22,10 @@ public class NoteController extends BaseController{
     @POST
     @Consumes("application/json")
     public Response writeNote(Note note){
-        noteService.writeNode(note);
+        int result = noteService.writeNode(note);
+        if (result==1){
+            return Response.status(500).build();
+        }
         return Response.ok().build();
     }
 
@@ -40,7 +43,10 @@ public class NoteController extends BaseController{
     @Path("{noteId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response modNote(Note note, @PathParam("noteId")int id) {
-        noteService.modNote(note,id);
+        int result = noteService.modNote(note,id);
+        if (result==1){
+            return Response.status(500).build();
+        }
         return Response.ok().build();
     }
 
