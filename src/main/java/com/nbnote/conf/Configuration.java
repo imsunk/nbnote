@@ -1,11 +1,8 @@
 package com.nbnote.conf;
 
-import com.nbnote.log.LoggerLoader;
-import jdk.internal.util.xml.impl.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletContext;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
