@@ -6,6 +6,10 @@
     <groupId>com.nbnote</groupId>
     <artifactId>nbnote</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>war</packaging>
+    <name>NBnote Maven Webapp</name>
+    <url>http://www.nbnote.com</url>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
