@@ -31,7 +31,7 @@ public class NoteController extends BaseController{
 
     @GET
     @Path("{userId}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
     public ArrayList<Note> getNote(@PathParam("userId")String userId){
         ArrayList<Note> noteList;
         noteList = noteService.getAllNote(userId);

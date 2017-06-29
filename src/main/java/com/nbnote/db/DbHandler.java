@@ -18,7 +18,7 @@ public class DbHandler {
 
         bds = new BasicDataSource();
         bds.setDriverClassName("com.mysql.jdbc.Driver");
-        bds.setUrl("jdbc:mysql://webzook.net:3306/nbnote");
+        bds.setUrl("jdbc:mysql://webzook.net:3306/nbnote?useUnicode=yes&characterEncoding=UTF-8");
         bds.setUsername("smile2x");
         bds.setPassword("0173");
         bds.setValidationQuery("SELECT 1");     //isValid오류 방지
