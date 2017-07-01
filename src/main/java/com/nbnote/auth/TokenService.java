@@ -27,7 +27,7 @@ public class TokenService {
     public TokenService() {
     }
 
-    public Token createToken(String userId) throws Exception {
+    public Token createToken(String userId,String ip, String platform) throws Exception {
         Token token = new Token();
         Date now = new Date();
 
@@ -35,6 +35,8 @@ public class TokenService {
         token.setExpireDate(generateExpireDate(now));
         token.setGenDate(now);
         token.setUserId(userId);
+        token.setPlatform(platform);
+        token.setIp(ip);
 
         insertToken(token);
 
@@ -66,12 +68,14 @@ public class TokenService {
 
 
     private void insertToken(Token token) throws Exception {
-        StringBuilder query = new StringBuilder("INSERT INTO api_token (id, token, expire_date, gen_date) values (?,?,?,?)");
+        StringBuilder query = new StringBuilder("INSERT INTO token (id, token, expire_date, gen_date, platform, ip) values (?,?,?,?,?,?)");
         ptmt = conn.prepareStatement(query.toString());
         ptmt.setString(1,token.getUserId());
         ptmt.setString(2,token.getToken());
         ptmt.setTimestamp(3, new java.sql.Timestamp(token.getExpireDate().getTime()));
         ptmt.setTimestamp(4, new java.sql.Timestamp(token.getGenDate().getTime()));
+        ptmt.setString(5,token.getPlatform());
+        ptmt.setString(6,token.getIp());
         ptmt.executeUpdate();
 
         ptmt.close();
@@ -79,7 +83,7 @@ public class TokenService {
 
     public Token getToken(String id) throws Exception {
         Date now = new Date();
-        StringBuilder query = new StringBuilder("SELECT token, user_id, expire_date, gen_date FROM token WHERE id = ?");
+        StringBuilder query = new StringBuilder("SELECT token, user_id, expire_date, gen_date, ip, platform FROM token WHERE id = ?");
         ptmt = conn.prepareStatement(query.toString());
         ptmt.setString(1,id);
         rs = ptmt.executeQuery();
@@ -89,6 +93,8 @@ public class TokenService {
         token.setUserId(rs.getString(2));
         token.setExpireDate(string2Date(rs.getString(3)));
         token.setGenDate(string2Date(rs.getString(4)));
+        token.setIp(rs.getString(5));
+        token.setPlatform(rs.getString(6));
 
         ptmt.close();
         rs.close();

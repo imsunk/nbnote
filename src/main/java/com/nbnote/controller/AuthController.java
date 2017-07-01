@@ -4,7 +4,9 @@ import com.nbnote.auth.Token;
 import com.nbnote.auth.TokenService;
 import com.nbnote.model.Auth;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -15,12 +17,11 @@ import javax.ws.rs.core.Response;
 @Path("/auth")
 public class AuthController  {
     private static final TokenService tokenSvc = new TokenService();
-
     @GET
-    @Path("/{param}")
+    @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Auth newToken(@PathParam("param") String id) throws Exception {
-        Token token = tokenSvc.createToken(id);
+    public Auth newToken(@PathParam("userId") String id, @Context HttpServletRequest requestContext, @HeaderParam("user-agent") String userAgent) throws Exception {
+        Token token = tokenSvc.createToken(id,requestContext.getRemoteAddr(),userAgent);
         Auth auth = null;
         try {
              auth = new Auth(token.getUserId(), token.getToken());

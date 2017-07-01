@@ -15,6 +15,9 @@ public class Token {
     private String userId;
     private Date expireDate;
     private Date genDate;
+    private String ip;
+    private String platform;
+
     public String getToken() {
         return token;
     }
@@ -38,6 +41,21 @@ public class Token {
     }
     public void setGenDate(Date issueDate) {
         this.genDate = issueDate;
+    }
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
     public static String generateToken() {
         Random random = new SecureRandom();

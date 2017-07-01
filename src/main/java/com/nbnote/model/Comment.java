@@ -12,9 +12,7 @@ public class Comment {
     private int parentId;
     private String writerId;
     private Date writeDate;
-    //private List<Reply> replies;
     private String content;
-    private int commentGroup;
 
     public int getId() {
         return id;
@@ -26,14 +24,6 @@ public class Comment {
 
     public void setParentId(int parentId) {
         this.parentId = parentId;
-    }
-
-    public int getCommentGroup() {
-        return commentGroup;
-    }
-
-    public void setCommentGroup(int commentGroup) {
-        this.commentGroup = commentGroup;
     }
 
     public void setId(int id) {
@@ -63,15 +53,6 @@ public class Comment {
     public void setWriteDate(Date writeDate) {
         this.writeDate = writeDate;
     }
-    /*
-    public List<com.nbnote.model.Reply> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(List<com.nbnote.model.Reply> replies) {
-        this.replies = replies;
-    }
-    */
 
     public String getContent() {
         return content;
