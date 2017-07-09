@@ -22,8 +22,7 @@ public class LoggerLoader {
         Properties logProperties = new Properties();
         InputStream stream = null;
         try {
-            //stream = LoggerLoader.class.getClassLoader().getResourceAsStream("conf/"+Configuration.LOG_CONF_FILE);
-            stream = new FileInputStream("conf/"+Configuration.LOG_CONF_FILE);
+            stream = LoggerLoader.class.getClassLoader().getResourceAsStream("/"+Configuration.LOG_CONF_FILE);
             logProperties.load(stream);
         } catch (FileNotFoundException e) {
             LOG.error(e.getMessage(), e);

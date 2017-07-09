@@ -81,27 +81,30 @@ public class TokenService {
         ptmt.close();
     }
 
-    public Token getToken(String id) throws Exception {
+    public Token getToken(String tokenNo) throws Exception {
         Date now = new Date();
-        StringBuilder query = new StringBuilder("SELECT token, user_id, expire_date, gen_date, ip, platform FROM token WHERE id = ?");
+        StringBuilder query = new StringBuilder("SELECT token, user_id, expire_date, gen_date, ip, platform FROM token WHERE token = ? and expire_date>?");
         ptmt = conn.prepareStatement(query.toString());
-        ptmt.setString(1,id);
+        ptmt.setString(1,tokenNo);
+        ptmt.setTimestamp(2,new java.sql.Timestamp(now.getTime()));
         rs = ptmt.executeQuery();
-        rs.next();
+
         Token token = new Token();
-        token.setToken(rs.getString(1));
-        token.setUserId(rs.getString(2));
-        token.setExpireDate(string2Date(rs.getString(3)));
-        token.setGenDate(string2Date(rs.getString(4)));
-        token.setIp(rs.getString(5));
-        token.setPlatform(rs.getString(6));
+        if(rs.next()) {
+            token.setToken(rs.getString(1));
+            token.setUserId(rs.getString(2));
+            token.setExpireDate(string2Date(rs.getString(3)));
+            token.setGenDate(string2Date(rs.getString(4)));
+            token.setIp(rs.getString(5));
+            token.setPlatform(rs.getString(6));
+        }
 
         ptmt.close();
         rs.close();
 
         return token;
-
     }
+
     public void deleteToken(String token) throws Exception {
         StringBuilder query = new StringBuilder("DELETE FROM token WHERE token = ?");
         ptmt = conn.prepareStatement(query.toString());

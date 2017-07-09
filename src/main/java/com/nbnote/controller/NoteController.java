@@ -1,13 +1,20 @@
 package com.nbnote.controller;
 
 import com.nbnote.model.Note;
+import com.nbnote.model.UploadPicture;
 import com.nbnote.service.NoteService;
+import com.nbnote.util.ImageUtil;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -17,6 +24,7 @@ import java.util.ArrayList;
 @Path("/note")
 public class NoteController extends BaseController{
     private static Logger LOG = LoggerFactory.getLogger(NoteController.class);
+    public static final String UPLOAD_FILE_SERVER = "D:/Demo/upload/";
     private  NoteService noteService = new NoteService();
 
     @POST
@@ -58,5 +66,31 @@ public class NoteController extends BaseController{
         return Response.ok().build();
     }
 
+     /*
+    @POST
+    @Path("picture")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public UploadPicture uploadPicture(@Context HttpServletRequest request) throws Exception {
+        UploadResult result = .uploadSnsFile(request);
+        String path =
 
+        File tmp = new File(es.util.Path.userUploadTmpDir(result.getFilename()));
+        if(tmp != null){
+            File parentFile = tmp.getParentFile();
+            if(parentFile != null) parentFile.mkdirs();
+        }
+
+        String snsImageName = null;
+        try {
+            snsImageName = ImageUtil.makeThumbnail(tmp.getAbsolutePath());
+        } catch (IOException ie){
+            ie.printStackTrace();
+        }
+
+        result.setFilename(FilenameUtils.getName(snsImageName));
+        result.setFileUrl(es.util.Path.userUploadTmpUrl(FilenameUtils.getName(snsImageName)).replace("\\", "/"));
+
+        return result;
+    }
+    */
 }

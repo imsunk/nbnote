@@ -3,10 +3,13 @@ package com.nbnote.conf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletContext;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Properties;
 
 /**
@@ -16,8 +19,13 @@ public class Configuration {
     private static Logger LOG = LoggerFactory.getLogger(Configuration.class);
     private static final String CONF_FILE = "nbnote.conf";
     public static final String LOG_CONF_FILE = "log4j.conf";
+
     private static Properties properties = new Properties();
     private static Configuration instance = null;
+
+    public static final String DB_HOST = "db.nbnote.host";
+    public static final String DB_USER= "db.nbnote.uname";
+    public static final String DB_PASSWD = "db.nbnote.passwd";
     /*
     private static class LazyHolder {
         private static final Configuration INSTANCE = new Configuration();
@@ -36,9 +44,9 @@ public class Configuration {
         return instance;
     }
 
-    public void load(){
+    public void load() {
         try {
-            InputStream stream =  new FileInputStream("conf/"+Configuration.CONF_FILE);
+            InputStream stream = this.getClass().getResourceAsStream("/" + Configuration.CONF_FILE);
             properties.load(stream);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
