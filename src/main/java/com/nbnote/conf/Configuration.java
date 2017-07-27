@@ -26,6 +26,11 @@ public class Configuration {
     public static final String DB_HOST = "db.nbnote.host";
     public static final String DB_USER= "db.nbnote.uname";
     public static final String DB_PASSWD = "db.nbnote.passwd";
+
+    public static final String IMAGE_TEMP_DIR = "path.image.temp";
+    public static final String IMAGE_ORG_DIR = "path.image.origin";
+    public static final String IMAGE_THUMB_DIR = "path.image.thumbnail";
+
     /*
     private static class LazyHolder {
         private static final Configuration INSTANCE = new Configuration();

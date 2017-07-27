@@ -8,16 +8,17 @@ import org.glassfish.jersey.process.internal.RequestScoped;
 /**
  * Created by K on 2017. 6. 17..
  */
-public class AppConfig extends ResourceConfig{
-    public AppConfig() {
-        register(new AbstractBinder(){
-            @Override
-            public void configure() {
-                bindFactory(TokenFactory.class).to(Token.class).in(RequestScoped.class);
-            }
-        });
+import org.glassfish.jersey.server.ResourceConfig;
 
-        packages("com.nbnote");
+import com.tutorialacademy.rest.filter.AuthenticationFilter;
 
+/**
+ *  set the filter applications manually and not via web.xml
+ */
+public class RestApplicationConfig extends ResourceConfig {
+
+    public RestApplicationConfig() {
+        packages( "com.tutorialacademy.rest.filter" );
+        register( AuthenticationFilter.class );
     }
 }

@@ -18,8 +18,8 @@ import java.io.IOException;
  */
 @Priority(Priorities.AUTHENTICATION)
 @Provider
-public class AuthenticationFilter implements ContainerRequestFilter {
-    private final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+public class AuthenticationFilterFOld implements ContainerRequestFilter {
+    private final Logger logger = LoggerFactory.getLogger(AuthenticationFilterFOld.class);
     private TokenService tokenSvc = new TokenService();
 
     @Override

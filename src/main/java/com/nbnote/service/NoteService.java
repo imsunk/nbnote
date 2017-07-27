@@ -52,6 +52,38 @@ public class NoteService extends Service{
        return notes;
     }
 
+
+    public ArrayList<Note> getNote(String userId, int noteId){
+        ArrayList<Note>  notes = new ArrayList<Note>();
+        StringBuilder query = new StringBuilder("select * from note where writer=? and id=?");
+        Connection con = conn.getConnection();
+        ResultSet rs = null;
+        try {
+            PreparedStatement ptmt = con.prepareStatement(query.toString());
+            ptmt.setString(1, userId);
+            ptmt.setInt(2, noteId);
+            rs = ptmt.executeQuery();
+            rs.next();
+            Note note = new Note();
+            note.setId(rs.getInt(1));
+            note.setTitle(rs.getString(2));
+            note.setWriter(rs.getString(3));
+            note.setWriteDate(rs.getTimestamp(4));
+            note.setWeather(rs.getString(5));
+            note.setTemperature(rs.getString(6));
+            note.setPlace(rs.getString(7));
+            note.setContent(rs.getString(8));
+            note.setConsumeTitle(rs.getString(9));
+            note.setIncomeTitle(rs.getString(10));
+            note.setConsume(rs.getString(11));
+            note.setIncome(rs.getString(12));
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        }
+
+        return notes;
+    }
+
     public int writeNode(Note note) {
         StringBuilder query = new StringBuilder("insert into note(title, writer, writeDate, weather, temperature, place, content, " +
                 "consumeTitle, incomeTitle, consume, income) values (?,?,?,?,?,?,?,?,?,?,?)" );
