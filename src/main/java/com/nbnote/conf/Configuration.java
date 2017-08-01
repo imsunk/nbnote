@@ -63,4 +63,9 @@ public class Configuration {
     public static String getConf(String key){
         return properties.getProperty(key);
     }
+
+	public String userUploadTmpUrl(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

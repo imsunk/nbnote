@@ -1,11 +1,5 @@
 package com.nbnote.model;
 
-import com.nbnote.auth.Token;
-import com.nbnote.auth.TokenService;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-
 /**
  * Created by K on 2017. 6. 18..
  */

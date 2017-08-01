@@ -54,4 +54,23 @@ public class LoginService extends Service {
             logger.debug(e.getMessage());
         }
     }
+    
+    public void login(User user){
+        StringBuilder query = new StringBuilder("update user set service=?, name=?, age=?, profile=?,email=?) where id=?");
+        Connection con = conn.getConnection();
+        PreparedStatement ptmt = null;
+        try {
+            ptmt = con.prepareStatement(query.toString());
+            ptmt.setString(1, user.getService());
+            ptmt.setString(2, user.getName());
+            ptmt.setString(3, user.getAge());
+            ptmt.setString(4, user.getProfile());
+            ptmt.setString(5, user.getEmail());
+            ptmt.setString(6, user.getId());
+
+            ptmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        }
+    }
 }

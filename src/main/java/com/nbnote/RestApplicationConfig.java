@@ -10,7 +10,7 @@ import org.glassfish.jersey.process.internal.RequestScoped;
  */
 import org.glassfish.jersey.server.ResourceConfig;
 
-import com.tutorialacademy.rest.filter.AuthenticationFilter;
+// import com.tutorialacademy.rest.filter.AuthenticationFilter;
 
 /**
  *  set the filter applications manually and not via web.xml

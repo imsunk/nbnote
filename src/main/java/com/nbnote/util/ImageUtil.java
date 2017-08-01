@@ -23,14 +23,19 @@ public class ImageUtil {
     }
 
     public static void moveImageToTemp(String path){
-
+    	// TODO Auto-generated method stub
     }
 
     public static void deleteTempFile(String path){
-
+    	// TODO Auto-generated method stub
     }
 
     public static void copyImageTo(String sourcePath,String target){
-
+    	// TODO Auto-generated method stub
     }
+
+	public static String makeThumbnail(String absolutePath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

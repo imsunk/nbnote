@@ -23,7 +23,7 @@ public class UploadPictureService {
 
         UploadPicture result = new UploadPicture();
         result.setFilename(FilenameUtils.getName(filePath));
-        result.setFileUrl(conf.getConf(conf.IMAGE_TEMP_DIR+ File.separator+FilenameUtils.getName(filePath));
+        result.setFileUrl(conf.getConf(conf.IMAGE_TEMP_DIR+ File.separator+FilenameUtils.getName(filePath)));
         result.setFileUrl(conf.userUploadTmpUrl(FilenameUtils.getName(filePath)));
 
         return result;
