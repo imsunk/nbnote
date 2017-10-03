@@ -1,24 +1,32 @@
 package com.nbnote.controller;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nbnote.model.Note;
 import com.nbnote.model.UploadPicture;
 import com.nbnote.service.NoteService;
 import com.nbnote.service.UploadPictureService;
 import com.nbnote.util.FileUtil;
 import com.nbnote.util.ImageUtil;
-import org.apache.commons.io.FilenameUtils;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.*;
-import java.util.ArrayList;
+import com.nbnote.util.PathUtil;
 
 /**
  * Created by K on 2017. 6. 14..
@@ -87,25 +95,25 @@ public class NoteController extends BaseController{
     public UploadPicture uploadPicture(@Context HttpServletRequest request) throws Exception {
         UploadPicture result = upPictureSvc.uploadNotePicture(request);
 
-        FileUtil result
-        File tmp = new File(es.util.Path.userUploadTmpDir(result.getFilename()));
+        FileUtil fileUtil;
+        File tmp = new File(PathUtil.userUploadTmpDir(result.getFilename()));
         if(tmp != null){
             File parentFile = tmp.getParentFile();
             if(parentFile != null) parentFile.mkdirs();
         }
 
         String snsImageName = null;
-        try {
-            snsImageName = ImageUtil.makeThumbnail(tmp.getAbsolutePath());
-        } catch (IOException ie){
-            ie.printStackTrace();
-        }
+        snsImageName = ImageUtil.makeThumbnail(tmp.getAbsolutePath());
 
         result.setFilename(FilenameUtils.getName(snsImageName));
-        result.setFileUrl(es.util.Path.userUploadTmpUrl(FilenameUtils.getName(snsImageName)).replace("\\", "/"));
+        result.setFileUrl(PathUtil.userUploadTmpUrl(FilenameUtils.getName(snsImageName)).replace("\\", "/"));
 
         return result;
     }
     */
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> origin/development
 }

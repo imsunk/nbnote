@@ -1,11 +1,14 @@
 package com.nbnote;
 
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.process.internal.RequestScoped;
 /**
  * Created by K on 2017. 6. 17..
  */
+import org.glassfish.jersey.server.ResourceConfig;
 
-import com.nbnote.filter.AuthenticationFilter;
+// import com.tutorialacademy.rest.filter.AuthenticationFilter;
 
 /**
  *  set the filter applications manually and not via web.xml
@@ -13,7 +16,7 @@ import com.nbnote.filter.AuthenticationFilter;
 public class RestApplicationConfig extends ResourceConfig {
 
     public RestApplicationConfig() {
-        packages( "com.nbnote.rest.filter" );
+        packages( "com.tutorialacademy.rest.filter" );
         register( AuthenticationFilter.class );
     }
 }

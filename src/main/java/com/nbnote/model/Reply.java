@@ -1,7 +1,6 @@
 package com.nbnote.model;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by K on 2017. 6. 26..

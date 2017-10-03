@@ -1,9 +1,7 @@
 package com.nbnote.model;
-import lombok.Data;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import lombok.Data;
 
 /**
  * Created by K on 2017. 6. 14..
