@@ -27,8 +27,15 @@ public class NoteControllerTest extends JerseyTest{
     }
 
     @Test
-    public void NoteListTest(){
-        Response response = target("/note/lskim").request().get();
+    public void AllNoteListTest(){
+        Response response = target("/note/users/lskim").request().get();
+        Assert.assertNotNull(response);
+        Assert.assertEquals(200, response.getStatus());
+    }
+
+    @Test
+    public void getNoteTest(){
+        Response response = target("/note/users/lskim/notes/3").request().get();
         Assert.assertNotNull(response);
         Assert.assertEquals(200, response.getStatus());
     }
@@ -49,7 +56,7 @@ public class NoteControllerTest extends JerseyTest{
         Date date = new Date();
         Note note = new Note(1,"test","laesunk",date,"cloudy","21c","에덴농장","테스트입니다","무4개","3000","비료","20000");
         Entity<Note> noteEntity = Entity.entity(note, MediaType.APPLICATION_JSON_TYPE);
-        Response response = target("/note/2").request().put(noteEntity);
+        Response response = target("/note/notes/3").request().put(noteEntity);
         Assert.assertNotNull(response);
         Assert.assertEquals("무4개",getNote(2).getConsumeTitle());
         Assert.assertEquals(200,response.getStatus());
@@ -57,12 +64,10 @@ public class NoteControllerTest extends JerseyTest{
 
     @Test
     public void deleteNoteTest() {
-        Response response = target("/note/2").request().delete();
+        Response response = target("/note/notes/4").request().delete();
         Assert.assertNotNull(response);
         Assert.assertEquals(200,response.getStatus());
-
     }
-
 
     public Note getNote(int id){
         DbHandler conn = DbHandler.getInstance();

@@ -15,6 +15,26 @@ public class User {
   private String email;
   private Date registerDate;
 
+  public User() {}
+
+  public User(String id, String service, String passwd, String name, String age, String profile, String email, Date registerDate) {
+    this.id = id;
+    this.service = service;
+    this.passwd = passwd;
+    this.name = name;
+    this.age = age;
+    this.profile = profile;
+    this.email = email;
+    this.registerDate = registerDate;
+  }
+
+  public User(String id, String email, String name, String passwd){
+    this.id = id;
+    this.email = email;
+    this.passwd = passwd;
+    this.name = name;
+
+  }
   public String getId() {
     return id;
   }

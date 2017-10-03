@@ -1,7 +1,7 @@
 package com.nbnote.controller;
 
-import com.nbnote.auth.Token;
-import com.nbnote.auth.TokenService;
+import com.nbnote.security.Token;
+import com.nbnote.security.TokenService;
 import com.nbnote.model.Auth;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
  * Created by K on 2017. 6. 18..
  */
 
-@Path("/auth")
+@Path("/security")
 public class AuthController  {
     private static final TokenService tokenSvc = new TokenService();
     @GET

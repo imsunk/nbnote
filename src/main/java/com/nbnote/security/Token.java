@@ -1,4 +1,4 @@
-package com.nbnote.auth;
+package com.nbnote.security;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;

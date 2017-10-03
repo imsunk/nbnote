@@ -1,4 +1,4 @@
-package com.nbnote.auth;
+package com.nbnote.security;
 
 import org.jose4j.jwk.RsaJsonWebKey;
 import org.jose4j.jwk.RsaJwkGenerator;
@@ -10,10 +10,8 @@ import org.jose4j.jwt.consumer.JwtConsumer;
 import org.jose4j.jwt.consumer.JwtConsumerBuilder;
 import org.jose4j.lang.JoseException;
 
-/**
- * Created by K on 2017. 7. 24..
- */
 public class TokenSecurity {
+
     private static RsaJsonWebKey rsaJsonWebKey = null;
     private static String issuer = "tutorial-academy.com";
     private static int timeToExpire = 30;
@@ -94,5 +92,4 @@ public class TokenSecurity {
         // validate and return the encoded user id
         return jwtClaims.getClaimsMap().get("id").toString();
     }
-
 }

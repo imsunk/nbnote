@@ -1,4 +1,4 @@
-package com.nbnote.auth;
+package com.nbnote.security;
 
 import org.glassfish.hk2.api.Factory;
 
