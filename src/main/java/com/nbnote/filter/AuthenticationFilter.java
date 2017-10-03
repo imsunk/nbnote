@@ -26,6 +26,7 @@ import java.util.*;
 /**
  * Created by K on 2017. 9. 3..
  */
+/*
 @Provider
 @Priority( Priorities.AUTHENTICATION )
 public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequestFilter
@@ -150,3 +151,4 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
         return isAllowed;
     }
 }
+*/
