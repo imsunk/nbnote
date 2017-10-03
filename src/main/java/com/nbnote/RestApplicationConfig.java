@@ -16,7 +16,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 public class RestApplicationConfig extends ResourceConfig {
 
     public RestApplicationConfig() {
-        packages( "com.tutorialacademy.rest.filter" );
+        /*
+        packages( "com.note" );
         register( AuthenticationFilter.class );
+        */
     }
 }

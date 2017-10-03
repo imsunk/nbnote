@@ -111,9 +111,4 @@ public class NoteController extends BaseController{
         return result;
     }
     */
-
-<<<<<<< HEAD
-=======
-    
->>>>>>> origin/development
 }
