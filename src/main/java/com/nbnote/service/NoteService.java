@@ -53,8 +53,8 @@ public class NoteService extends Service{
     }
 
 
-    public ArrayList<Note> getNote(String userId, int noteId){
-        ArrayList<Note>  notes = new ArrayList<Note>();
+    public Note getNote(String userId, int noteId){
+        Note note = new Note();
         StringBuilder query = new StringBuilder("select * from note where writer=? and id=?");
         Connection con = conn.getConnection();
         ResultSet rs = null;
@@ -64,7 +64,6 @@ public class NoteService extends Service{
             ptmt.setInt(2, noteId);
             rs = ptmt.executeQuery();
             rs.next();
-            Note note = new Note();
             note.setId(rs.getInt(1));
             note.setTitle(rs.getString(2));
             note.setWriter(rs.getString(3));
@@ -81,7 +80,7 @@ public class NoteService extends Service{
             logger.debug(e.getMessage());
         }
 
-        return notes;
+        return note;
     }
 
     public int writeNode(Note note) {

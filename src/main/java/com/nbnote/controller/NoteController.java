@@ -62,11 +62,11 @@ public class NoteController extends BaseController{
     @GET
     @Path("/users/{userId}/notes/{noteId}")
     @Produces(MediaType.APPLICATION_JSON+ ";charset=utf-8")
-    public ArrayList<Note> getNote(@PathParam("userId")String userId, @PathParam("noteId")int noteId){
-        ArrayList<Note> noteList;
-        noteList = noteService.getNote(userId,noteId);
+    public Note getNote(@PathParam("userId")String userId, @PathParam("noteId")int noteId){
+        Note note;
+        note = noteService.getNote(userId,noteId);
 
-        return noteList;
+        return note;
     }
 
     @PUT
