@@ -1,5 +1,6 @@
 package com.nbnote.controller;
 
+import com.nbnote.model.LoginParam;
 import com.nbnote.model.Note;
 import com.nbnote.model.User;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -26,7 +27,7 @@ public class LoginControllerTest extends JerseyTest {
     public void registerUserTest(){
         Date date = new Date();
         User user = new User();
-        user.setId("laesunk");
+        user.setId("laesunk1");
         user.setAge("20");
         user.setEmail("laesunk@gmail.com");
         user.setName("김래선");
@@ -36,7 +37,18 @@ public class LoginControllerTest extends JerseyTest {
         user.setRegisterDate(date);
 
         Entity<User> logInEntity = Entity.entity(user, MediaType.APPLICATION_JSON_TYPE);
-        Response response = target("/login").request().put(logInEntity);
+        Response response = target("/login/register").request().put(logInEntity);
+        Assert.assertNotNull(response);
+        Assert.assertEquals(200,response.getStatus());
+    }
+
+    @Test
+    public void signInTest(){
+        LoginParam  loginParam = new LoginParam("laesunk", "asdklfjasdflk1ajsd");
+
+        Entity<LoginParam> logInEntity = Entity.entity(loginParam, MediaType.APPLICATION_JSON_TYPE);
+        Response response = target("/login").request().post(logInEntity);
+        //Response response = target("/login").request().get(logInEntity);
         Assert.assertNotNull(response);
         Assert.assertEquals(200,response.getStatus());
     }

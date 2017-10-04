@@ -1,10 +1,9 @@
 package com.nbnote.controller;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
+import com.nbnote.model.LoginParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,22 +19,30 @@ public class LoginController {
     private LoginService loginSvc = new LoginService();
 
     @PUT
+    @Path("/register")
+    @Consumes("application/json")
     public Response registerUser(User user) {
         loginSvc.registerUser(user);
         return Response.ok().build();
     }
 
-    @PUT
+    /*
+    @POST
     @Path("{userId}")
+    @Consumes("application/json")
     public Response modUserInfo(User user){
         loginSvc.modUserInfo(user);
         return Response.ok().build();
     }
+    */
     
     @POST
-    @Path("")
-    public Response login(User user){
-        loginSvc.modUserInfo(user);
+    @Consumes("application/json")
+    public Response login(LoginParam param){
+        User user = loginSvc.signIn(param);
+        if(user==null){
+            return Response.status(404).build();
+        }
         return Response.ok().build();
     }    
 }

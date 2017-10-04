@@ -13,13 +13,9 @@ import org.glassfish.jersey.server.ResourceConfig;
 /**
  *  set the filter applications manually and not via web.xml
  */
-/*
 public class RestApplicationConfig extends ResourceConfig {
-
     public RestApplicationConfig() {
         packages( "com.note" );
         register( AuthenticationFilter.class );
     }
 }
-
-*/
