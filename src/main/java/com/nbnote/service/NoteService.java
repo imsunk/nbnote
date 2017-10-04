@@ -25,8 +25,9 @@ public class NoteService extends Service{
        StringBuilder query = new StringBuilder("select * from note where writer=?");
        Connection con = conn.getConnection();
        ResultSet rs = null;
+       PreparedStatement ptmt = null;
        try {
-            PreparedStatement ptmt = con.prepareStatement(query.toString());
+            ptmt = con.prepareStatement(query.toString());
             ptmt.setString(1, userId);
             rs = ptmt.executeQuery();
             while(rs.next()) {
@@ -47,6 +48,14 @@ public class NoteService extends Service{
             }
         } catch (SQLException e) {
             logger.debug(e.getMessage());
+        } finally {
+            try{
+                rs.close();
+                ptmt.close();
+                con.close();
+            }catch (SQLException e){
+                logger.debug(e.getMessage());
+            }
         }
 
        return notes;
@@ -58,8 +67,9 @@ public class NoteService extends Service{
         StringBuilder query = new StringBuilder("select * from note where writer=? and id=?");
         Connection con = conn.getConnection();
         ResultSet rs = null;
+        PreparedStatement ptmt = null;
         try {
-            PreparedStatement ptmt = con.prepareStatement(query.toString());
+            ptmt = con.prepareStatement(query.toString());
             ptmt.setString(1, userId);
             ptmt.setInt(2, noteId);
             rs = ptmt.executeQuery();
@@ -78,6 +88,14 @@ public class NoteService extends Service{
             note.setIncome(rs.getString(12));
         } catch (SQLException e) {
             logger.debug(e.getMessage());
+        } finally {
+            try{
+                rs.close();
+                ptmt.close();
+                con.close();
+            }catch (SQLException e){
+                logger.debug(e.getMessage());
+            }
         }
 
         return note;
@@ -105,7 +123,15 @@ public class NoteService extends Service{
         } catch (SQLException e) {
             logger.debug(e.getMessage());
             return 1;
+        } finally {
+            try{
+                ptmt.close();
+                con.close();
+            }catch (SQLException e){
+                logger.debug(e.getMessage());
+            }
         }
+
         return 0;
 
     }
@@ -129,6 +155,13 @@ public class NoteService extends Service{
         } catch (SQLException e) {
             logger.debug(e.getMessage());
             return 1;
+        } finally {
+            try{
+                ptmt.close();
+                con.close();
+            }catch (SQLException e){
+                logger.debug(e.getMessage());
+            }
         }
 
         return 0;
@@ -144,6 +177,13 @@ public class NoteService extends Service{
             ptmt.executeUpdate();
         }catch (Exception e){
             e.printStackTrace();
+        } finally {
+            try{
+                ptmt.close();
+                con.close();
+            }catch (SQLException e){
+                logger.debug(e.getMessage());
+            }
         }
     }
 
