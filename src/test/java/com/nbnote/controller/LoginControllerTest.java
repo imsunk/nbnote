@@ -27,7 +27,7 @@ public class LoginControllerTest extends JerseyTest {
     public void registerUserTest(){
         Date date = new Date();
         User user = new User();
-        user.setId("laesunk1");
+        user.setId("laesunk12");
         user.setAge("20");
         user.setEmail("laesunk@gmail.com");
         user.setName("김래선");
@@ -44,7 +44,7 @@ public class LoginControllerTest extends JerseyTest {
 
     @Test
     public void signInTest(){
-        LoginParam  loginParam = new LoginParam("laesunk", "asdklfjasdflk1ajsd");
+        LoginParam  loginParam = new LoginParam("laesunk", "asdklfjasdflkajsd");
 
         Entity<LoginParam> logInEntity = Entity.entity(loginParam, MediaType.APPLICATION_JSON_TYPE);
         Response response = target("/login").request().post(logInEntity);
