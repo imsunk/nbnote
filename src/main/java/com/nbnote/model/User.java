@@ -1,11 +1,15 @@
 package com.nbnote.model;
 
+import com.nbnote.response.JsonSerializable;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
  * Created by K on 2017. 6. 29..
  */
-public class User {
+public class User implements JsonSerializable {
   private String id;
   private String service;
   private String passwd;
@@ -13,7 +17,9 @@ public class User {
   private String age;
   private String profile;
   private String email;
+  private String role;
   private Date registerDate;
+  private String token;
 
   public User() {}
 
@@ -99,4 +105,33 @@ public class User {
     this.registerDate = registerDate;
   }
 
+  public String getRole() {
+    return role;
+  }
+
+  public void setRole(String role) {
+    this.role = role;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
+  }
+
+  @Override
+  public JSONObject toJson() throws JSONException {
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put( "id", this.id );
+    jsonObject.put( "name", this.name );
+    jsonObject.put( "age", this.age );
+    jsonObject.put( "token", this.token );
+    jsonObject.put( "profile", this.profile );
+    jsonObject.put( "email", this.email );
+    jsonObject.put( "role", this.role );
+    jsonObject.put( "role", this.role );
+    return jsonObject;
+  }
 }

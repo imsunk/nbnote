@@ -57,7 +57,8 @@ public class NoteControllerTest extends JerseyTest{
         Entity<Note> noteEntity = Entity.entity(note, MediaType.APPLICATION_JSON_TYPE);
         Response response = target("/note").request().post(noteEntity);
         Assert.assertNotNull(response);
-       Assert.assertEquals(200,response.getStatus());
+
+        Assert.assertEquals(200,response.getStatus());
 
     }
 

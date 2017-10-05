@@ -1,41 +1,36 @@
 package com.nbnote.model;
 
+import java.util.Date;
+
 /**
  * Created by K on 2017. 9. 3..
  */
-public class UserSecurity extends User {
+public class UserSecurity {
 
-    private String password = null;
     private String token = null;
     private String role = null;
+    private String id = null;
+    private Date expire_time = null;
 
     public UserSecurity() {}
 
-    public UserSecurity( String password, String token ) {
-        this.password = password;
+    public UserSecurity( String id,  String token ) {
+        this.id = id;
         this.token = token;
     }
 
-    public UserSecurity( String password, String token, String role ) {
-        this.password = password;
-        this.token = token;
-        this.role = role;
-    }
-
-    public UserSecurity( String email, String password, String token, String role ) {
-        this.password = password;
+    public UserSecurity( String id, String token, String role ) {
+        this.id = id;
         this.token = token;
         this.role = role;
     }
 
-    public String getPassword() {
-        return password;
+    public UserSecurity( String id, String token, String role, Date expire_time ) {
+        this.id = id;
+        this.token = token;
+        this.role = role;
+        this.expire_time = expire_time;
     }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getToken() {
         return token;
     }
@@ -52,9 +47,24 @@ public class UserSecurity extends User {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "UserSecurity [id="+ this.getId() + ", email=" + this.getEmail() + ", role=" + role + ", password=" + password + ", token=" + token + "]";
+    public String getId() {
+        return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Date getExpire_time() {
+        return expire_time;
+    }
+
+    public void setExpire_time(Date expire_time) {
+        this.expire_time = expire_time;
+    }
+
+    @Override
+    public String toString() {
+        return "UserSecurity [id="+ this.getId() + ", role=" + role + ", token=" + token + "]";
+    }
 }

@@ -2,6 +2,7 @@ package com.nbnote.service;
 
 import com.nbnote.exception.UserExistingException;
 import com.nbnote.exception.UserNotFoundException;
+import com.nbnote.model.LoginParam;
 import com.nbnote.model.User;
 import com.nbnote.model.UserSecurity;
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,332 +23,142 @@ public class UserDAO extends Service{
 
     private Connection connection = null;
 
-
-    public boolean createUser(UserSecurity user ) throws UserExistingException {
-        logger.debug( "createUser: " + user.getEmail() );
-
-        PreparedStatement stmt = null;
-
+    public boolean createUser(User user, String hashedPasswd ) throws UserExistingException {
+        StringBuilder query = new StringBuilder("insert into user(id, service, passwd, name,age,profile,email,registerDate)" +
+                " values (?,?,?,?,?,?,?,?)");
+        Connection con = conn.getConnection();
+        PreparedStatement ptmt = null;
         try {
+            ptmt = con.prepareStatement(query.toString());
+            ptmt.setString(1, user.getId());
+            ptmt.setString(2, user.getService());
+            ptmt.setString(3, hashedPasswd);
+            ptmt.setString(4, user.getName());
+            ptmt.setString(5, user.getAge());
+            ptmt.setString(6, user.getProfile());
+            ptmt.setString(7, user.getEmail());
+            ptmt.setTimestamp(8, new java.sql.Timestamp(new Date().getTime()));
 
-            // check if user already registered
+            ptmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        } finally {
             try {
-                if( getUserIdByEmail( user.getEmail() ) != null ) {
-                    throw new UserExistingException( user.getEmail() );
-                }
-            }
-            // continue if no user found
-            catch( UserNotFoundException e) {}
-
-            stmt = connection.prepareStatement( "INSERT INTO USER(" +
-                    "email,firstname,lastname,password,role) VALUES" +
-                    "(?,?,?,?,?)" );
-            stmt.setString( 1, user.getEmail() );
-            /*
-            stmt.setString( 2, user.getFirstname() );
-            stmt.setString( 3, user.getLastname() );
-            */
-            stmt.setString( 4, user.getPassword() );
-            stmt.setString( 5, user.getRole() );
-            stmt.executeUpdate();
-
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
-            try {
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
+                ptmt.close();
+                conn.getConnection().close();
+            } catch (SQLException e){
+                logger.debug(e.getMessage());
             }
         }
 
         return true;
     }
 
-    public String getUserIdByEmail(String email) throws UserNotFoundException {
-        logger.debug( "getUserIdByEmail: " + email );
-
-        String id = null;
-        PreparedStatement stmt = null;
+    public boolean checkUserById(String id) throws UserNotFoundException{
+        StringBuilder query = new StringBuilder("select * from user where id=?");
+        Connection con = conn.getConnection();
+        PreparedStatement ptmt = null;
         ResultSet rs = null;
-
         try {
-            stmt = connection.prepareStatement( "SELECT id FROM USER WHERE email=?;" );
-            stmt.setString(1, email);
-            rs = stmt.executeQuery();
+            ptmt = con.prepareStatement(query.toString());
+            ptmt.setString(1, id);
+            rs = ptmt.executeQuery();
+            rs.next();
 
-            if( rs.next() ) {
-                id = String.valueOf( rs.getInt("id") );
-            }
-            else {
-                throw new UserNotFoundException( email );
+            if(rs.getRow()>=1) {
+                return false;
+            }else{
+                throw new UserNotFoundException( id );
             }
 
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        } finally {
             try {
                 rs.close();
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
+                ptmt.close();
+                conn.getConnection().close();
+            } catch (SQLException e){
+                logger.debug(e.getMessage());
             }
         }
 
-        return id;
+        return true;
     }
 
-    public User getUser(String id) throws UserNotFoundException {
-        logger.debug( "getUser: " + id );
-
-        PreparedStatement stmt = null;
+    public User getUser(String id)  throws UserNotFoundException{
+        StringBuilder query = new StringBuilder("select * from user where id=?");
+        Connection con = conn.getConnection();
+        PreparedStatement ptmt = null;
         ResultSet rs = null;
         User user = null;
-
         try {
-            stmt = connection.prepareStatement( "SELECT id, firstname, lastname, email FROM USER WHERE id=?;" );
-            stmt.setString(1, id);
-            rs = stmt.executeQuery();
+            ptmt = con.prepareStatement(query.toString());
+            ptmt.setString(1, id);
+            rs = ptmt.executeQuery();
 
-            if( rs.next() ) {
-                String userId = String.valueOf( rs.getInt("id") );
-                String email = rs.getString("email");
-                String firstname = rs.getString("firstname");
-                String lastname = rs.getString("lastname");
-
-                user = new User(userId, email, firstname, lastname );
+            rs.next();
+            if (rs.getRow() >= 1) {
+                user = new User();
+                user.setId(rs.getString(1));
+                user.setName(rs.getString(4));
+                user.setAge(rs.getString(5));
+                user.setProfile(rs.getString(6));
+                user.setEmail(rs.getString(7));
+                user.setRegisterDate(rs.getDate(8));
             }
-            else {
-                throw new UserNotFoundException( id );
-            }
 
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        } finally {
             try {
                 rs.close();
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
+                ptmt.close();
+                conn.getConnection().close();
+            } catch (SQLException e) {
+                logger.debug(e.getMessage());
             }
         }
 
         return user;
     }
 
-    public List<User> getAllUsers() {
-        logger.debug( "getAllUsers" );
-
-        PreparedStatement stmt = null;
+    public User getUser(LoginParam param){
+        StringBuilder query = new StringBuilder("select * from user where id=? and passwd=?");
+        Connection con = conn.getConnection();
+        PreparedStatement ptmt = null;
         ResultSet rs = null;
-        List<User> user = new ArrayList<User>();
-
+        User user = null;
         try {
-            stmt = connection.prepareStatement( "SELECT id, firstname, lastname, email FROM USER;" );
-            rs = stmt.executeQuery();
+            ptmt = con.prepareStatement(query.toString());
+            ptmt.setString(1, param.getId());
+            ptmt.setString(2, param.getPasswd());
+            rs = ptmt.executeQuery();
 
-            while( rs.next() ) {
-                String userId = String.valueOf( rs.getInt("id") );
-                String email = rs.getString("email");
-                String firstname = rs.getString("firstname");
-                String lastname = rs.getString("lastname");
-
-                //user.add( new User( userId, email, firstname, lastname ) );
+            rs.next();
+            if(rs.getRow()>=1) {
+                user = new User();
+                user.setId(rs.getString(1));
+                user.setName(rs.getString(4));
+                user.setAge(rs.getString(5));
+                user.setProfile(rs.getString(6));
+                user.setEmail(rs.getString(7));
+                user.setRegisterDate(rs.getDate(8));
             }
 
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
+        } catch (SQLException e) {
+            logger.debug(e.getMessage());
+        } finally {
             try {
                 rs.close();
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
+                ptmt.close();
+                conn.getConnection().close();
+            } catch (SQLException e){
+                logger.debug(e.getMessage());
             }
         }
 
         return user;
     }
 
-    public UserSecurity getUserAuthentication( String id ) throws UserNotFoundException {
-        logger.debug( "getUserAuthentication: " + id );
-
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        UserSecurity userSecurity = null;
-
-        try {
-            stmt = connection.prepareStatement( "SELECT email, password, token, role FROM USER WHERE id=?;" );
-            stmt.setString(1, id);
-            rs = stmt.executeQuery();
-
-            if( rs.next() ) {
-                String email = rs.getString("email");
-                String password = rs.getString("password");
-                String token = rs.getString("token");
-                String role = rs.getString("role");
-
-                userSecurity = new UserSecurity( email, password, token, role );
-            }
-            else {
-                throw new UserNotFoundException( id );
-            }
-
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
-            try {
-                rs.close();
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
-            }
-        }
-
-        return userSecurity;
-    }
-
-    public boolean setUserAuthentication( UserSecurity user ) throws UserNotFoundException {
-        logger.debug( "setUserAuthentication: " + user.getId() );
-
-        PreparedStatement stmt = null;
-
-        try {
-            // prepare query
-            StringBuffer query = new StringBuffer();
-            query.append( "UPDATE USER SET " );
-
-            boolean comma = false;
-            List<String> prepare = new ArrayList<String>();
-            if( user.getPassword() != null ) {
-                query.append( "password=?" );
-                comma = true;
-                prepare.add( user.getPassword() );
-            }
-
-            if( user.getToken() != null ) {
-                if( comma ) query.append(",");
-                query.append( "token=?" );
-                comma = true;
-                prepare.add( user.getToken() );
-            }
-
-            if( user.getRole() != null ) {
-                if( comma ) query.append(",");
-                query.append( "role=?" );
-                prepare.add( user.getRole() );
-            }
-
-            query.append(" WHERE id=?");
-            stmt = connection.prepareStatement( query.toString() );
-
-            for( int i = 0; i < prepare.size(); i++ ) {
-                stmt.setString( i+1, prepare.get(i) );
-            }
-
-            stmt.setInt( prepare.size() + 1, Integer.parseInt( user.getId() ) );
-
-            stmt.executeUpdate();
-
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
-            try {
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
-            }
-        }
-
-        return true;
-    }
-
-    public boolean updateUser( User user ) throws UserNotFoundException {
-        /*
-        logger.debug( "updateUser: " + user.getId() );
-
-        PreparedStatement stmt = null;
-
-        try {
-            // prepare query
-            StringBuffer query = new StringBuffer();
-            query.append( "UPDATE USER SET " );
-
-            boolean comma = false;
-            List<String> prepare = new ArrayList<String>();
-            if( user.getFirstname() != null ) {
-                query.append( "firstname=?" );
-                comma = true;
-                prepare.add( user.getFirstname() );
-            }
-
-            if( user.getLastname() != null ) {
-                if( comma ) query.append(",");
-                query.append( "lastname=?" );
-                comma = true;
-                prepare.add( user.getLastname() );
-            }
-
-            if( user.getEmail() != null ) {
-                if( comma ) query.append(",");
-                query.append( "email=?" );
-                prepare.add( user.getEmail() );
-            }
-
-            query.append(" WHERE id=?");
-            stmt = connection.prepareStatement( query.toString() );
-
-            for( int i = 0; i < prepare.size(); i++ ) {
-                stmt.setString( i+1, prepare.get(i) );
-            }
-
-            stmt.setInt( prepare.size() + 1, Integer.parseInt( user.getId() ) );
-
-            stmt.executeUpdate();
-
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
-            try {
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
-            }
-        }*/
-
-        return true;
-    }
-
-    public boolean deleteUser( String id ) throws UserNotFoundException {
-        logger.debug( "deleteUser: " + id );
-
-        PreparedStatement stmt = null;
-
-        try {
-
-            stmt = connection.prepareStatement( "DELETE FROM USER WHERE id=?" );
-            stmt.setString( 1, id );
-
-            stmt.executeUpdate();
-
-        } catch ( SQLException e ) {
-            logger.debug( e.getClass().getName() + ": " + e.getMessage() );
-        }
-        finally {
-            try {
-                stmt.close();
-            } catch ( SQLException e ) {
-                logger.warn( e.getMessage() );
-            }
-        }
-
-        return true;
-    }
 }

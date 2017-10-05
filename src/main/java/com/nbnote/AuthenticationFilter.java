@@ -19,6 +19,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import com.nbnote.service.TokenDAO;
 import org.apache.log4j.Logger;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
@@ -33,7 +34,7 @@ import com.nbnote.security.TokenSecurity;
  * The AuthenticationFilter verifies the access permissions for a user based on the provided jwt token
  * and role annotations
  **/
-/*
+
 @Provider
 @Priority( Priorities.AUTHENTICATION )
 public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequestFilter
@@ -97,12 +98,11 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
             }
 
             // check if token matches an user token (set in user/authenticate)
+            TokenDAO tokenDao = new TokenDAO();
             UserDAO userDao = new UserDAO();
-            User user = null;
-            try {
-                user = userDao.getUser( id );
-            }
-            catch ( UserNotFoundException e ) {
+
+            User user = userDao.getUser( id );
+            if(user==null){
                 logger.warn("Token missmatch!");
                 requestContext.abortWith(
                         ResponseBuilder.createResponse( Response.Status.UNAUTHORIZED, ACCESS_DENIED )
@@ -110,7 +110,7 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
                 return;
             }
 
-            UserSecurity userSecurity = userDao.getUserAuthentication( user.getId() );
+            UserSecurity userSecurity = tokenDao.getUserAuthentication( user.getId() );
 
             // token does not match with token stored in database - enforce re authentication
             if( !userSecurity.getToken().equals( jwt ) ) {
@@ -158,4 +158,3 @@ public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequ
         return isAllowed;
     }
 }
-*/

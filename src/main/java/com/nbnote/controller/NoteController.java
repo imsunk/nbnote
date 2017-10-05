@@ -3,6 +3,8 @@ package com.nbnote.controller;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.annotation.security.DeclareRoles;
+import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -25,13 +27,14 @@ import com.nbnote.model.Note;
 import com.nbnote.model.UploadPicture;
 import com.nbnote.service.NoteService;
 import com.nbnote.service.UploadPictureService;
+import com.nbnote.util.FileUtil;
 import com.nbnote.util.ImageUtil;
 import com.nbnote.util.PathUtil;
 
 /**
  * Created by K on 2017. 6. 14..
  */
-
+@DeclareRoles({"admin", "user", "guest"})
 @Path("/note")
 public class NoteController extends BaseController {
 	private static Logger LOG = LoggerFactory.getLogger(NoteController.class);
@@ -40,6 +43,7 @@ public class NoteController extends BaseController {
 	private UploadPictureService upPictureSvc = new UploadPictureService();
 
 	@POST
+    @RolesAllowed({"user"})
 	@Consumes("application/json")
 	public Response writeNote(Note note) {
 		int result = noteService.writeNode(note);
@@ -50,6 +54,7 @@ public class NoteController extends BaseController {
 	}
 
 	@GET
+    @RolesAllowed({"user"})
 	@Path("/users/{userId}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public ArrayList<Note> getNoteList(@PathParam("userId") String userId) {
@@ -60,6 +65,7 @@ public class NoteController extends BaseController {
 	}
 
 	@GET
+    @RolesAllowed({"user"})
 	@Path("/users/{userId}/notes/{noteId}")
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Note getNote(@PathParam("userId") String userId, @PathParam("noteId") int noteId) {
@@ -70,6 +76,7 @@ public class NoteController extends BaseController {
 	}
 
 	@PUT
+    @RolesAllowed({"user"})
 	@Consumes("application/json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response modNote(Note note, @PathParam("noteId") int id) {
@@ -81,6 +88,7 @@ public class NoteController extends BaseController {
 	}
 
 	@DELETE
+    @RolesAllowed({"user"})
 	@Path("/notes/{noteId}")
 	public Response deleteNote(@PathParam("noteId") int noteId) {
 		noteService.deleteNote(noteId);
