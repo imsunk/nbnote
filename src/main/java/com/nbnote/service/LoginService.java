@@ -1,14 +1,31 @@
 package com.nbnote.service;
 
+import com.nbnote.AuthenticationFilter;
+import com.nbnote.exception.UserExistingException;
+import com.nbnote.exception.UserNotFoundException;
 import com.nbnote.model.LoginParam;
 import com.nbnote.model.User;
+import com.nbnote.model.UserSecurity;
+import com.nbnote.response.ResponseBuilder;
+import com.nbnote.security.PasswordSecurity;
+import com.nbnote.security.TokenSecurity;
+import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.PermitAll;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by K on 2017. 6. 29..
@@ -16,33 +33,88 @@ import java.sql.SQLException;
 public class LoginService extends Service {
     private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
-    public void registerUser(User user) {
-        StringBuilder query = new StringBuilder("insert into user(id, service, passwd, name,age,profile,email,registerDate)" +
-                " values (?,?,?,?,?,?,?,?)");
-        Connection con = conn.getConnection();
-        PreparedStatement ptmt = null;
-        try {
-            ptmt = con.prepareStatement(query.toString());
-            ptmt.setString(1, user.getId());
-            ptmt.setString(2, user.getService());
-            ptmt.setString(3, user.getPasswd());
-            ptmt.setString(4, user.getName());
-            ptmt.setString(5, user.getAge());
-            ptmt.setString(6, user.getProfile());
-            ptmt.setString(7, user.getEmail());
-            ptmt.setTimestamp(8, new java.sql.Timestamp(user.getRegisterDate().getTime()));
+    public Response registerUser(User user) {
+        UserDAO userDao = new UserDAO();
+        UserSecurity userSecurity = new UserSecurity(user.getPasswd(),user.getId(),user.getRole());
 
-            ptmt.executeUpdate();
-        } catch (SQLException e) {
-            logger.debug(e.getMessage());
-        } finally {
+        try {
             try {
-                ptmt.close();
-                conn.getConnection().close();
-            } catch (SQLException e){
-                logger.debug(e.getMessage());
+                // check if user no registered already
+                userDao.checkUserById( user.getId() );
+                throw new UserExistingException( user.getId() );
+            }
+            catch( UserNotFoundException e ) {
+                String passwd =  PasswordSecurity.generateHash( user.getPasswd() );
+                userDao.createUser(user, passwd);
+                // authenticate user
+                return makeNewAuthToken(user);
             }
         }
+        catch ( UserExistingException e ) {
+            return ResponseBuilder.createResponse( Response.Status.CONFLICT, e.getMessage() );
+        }
+        catch ( Exception e ) {
+            return ResponseBuilder.createResponse( Response.Status.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+   public Response makeNewAuthToken(User user ) {
+        UserDAO userDao = new UserDAO();
+        TokenDAO tokenDao = new TokenDAO();
+
+        String token="";
+
+        try {
+            token = TokenSecurity.generateJwtToken(user.getId());
+            UserSecurity sec = new UserSecurity(user.getId(), token, user.getRole(), new Date());
+            tokenDao.saveNewToken(sec);
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put(AuthenticationFilter.AUTHORIZATION_PROPERTY, token);
+
+            // Return the token on the response
+            return ResponseBuilder.createResponse(Response.Status.OK, map);
+        } catch (UserNotFoundException e) {
+            return ResponseBuilder.createResponse(Response.Status.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            return ResponseBuilder.createResponse(Response.Status.UNAUTHORIZED, e.getMessage());
+        }
+    }
+
+
+
+    public Response authenticate(LoginParam param) {
+        UserDAO userDao = new UserDAO();
+        TokenDAO tokenDao = new TokenDAO();
+
+        try {
+            User user = userDao.getUser(param.getId());
+
+            if( PasswordSecurity.validatePassword( param.getPasswd(), user.getPasswd() ) == false ) {
+                return ResponseBuilder.createResponse( Response.Status.UNAUTHORIZED );
+            }
+            /*
+            // generate a token for the user
+            String token = TokenSecurity.generateJwtToken( id );
+            // write the token to the database
+            UserSecurity sec = new UserSecurity(id, token);
+            tokenDao.setUserAuthentication(sec);
+            */
+            String token = tokenDao.getUserAuthentication(param.getId()).getToken();
+
+            Map<String,Object> map = new HashMap<String,Object>();
+            map.put( AuthenticationFilter.AUTHORIZATION_PROPERTY, token );
+
+            // Return the token on the response
+            return ResponseBuilder.createResponse( Response.Status.OK, map );
+        }
+        catch( UserNotFoundException e ) {
+            return ResponseBuilder.createResponse( Response.Status.NOT_FOUND, e.getMessage() );
+        }
+        catch( Exception e ) {
+            return ResponseBuilder.createResponse( Response.Status.UNAUTHORIZED );
+        }
+
     }
 
     public void modUserInfo(User user) {
@@ -70,43 +142,42 @@ public class LoginService extends Service {
             }
         }
     }
-    
+
+    /*
     public User signIn(LoginParam param){
-        StringBuilder query = new StringBuilder("select * from user where id=? and passwd=?");
+        UserDAO dao = new UserDAO();
+        TokenDAO tokenDao = new TokenDAO();
+
+        authenticate(param.getPasswd(),param.getId());
+        User user = dao.getUser(param);
+        if (user!=null){
+            UserSecurity userSecurity = tokenDao.getUserAuthentication(param.getId());
+            user.setToken(userSecurity.getToken());
+        }
+
+        return user;
+    } */
+
+    public boolean signOut(String id){
+        StringBuilder query = new StringBuilder("DELETE FROM token WHERE id=?" );
         Connection con = conn.getConnection();
         PreparedStatement ptmt = null;
-        ResultSet rs = null;
-        User user = null;
         try {
             ptmt = con.prepareStatement(query.toString());
-            ptmt.setString(1, param.getId());
-            ptmt.setString(2, param.getPasswd());
-            rs = ptmt.executeQuery();
-
-            rs.next();
-            if(rs.getRow()>=1) {
-                user = new User();
-                user.setId(rs.getString(1));
-                user.setName(rs.getString(4));
-                user.setAge(rs.getString(5));
-                user.setProfile(rs.getString(6));
-                user.setEmail(rs.getString(7));
-                user.setRegisterDate(rs.getDate(8));
-            }
-
-        } catch (SQLException e) {
+            ptmt.setString(1,id);
+            ptmt.executeUpdate();
+        }catch (Exception e){
             logger.debug(e.getMessage());
+            return false;
         } finally {
-            try {
-                rs.close();
+            try{
                 ptmt.close();
-                conn.getConnection().close();
-            } catch (SQLException e){
+                con.close();
+            }catch (SQLException e){
                 logger.debug(e.getMessage());
             }
         }
 
-        return user;
+        return true;
     }
-
 }
