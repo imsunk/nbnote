@@ -16,7 +16,6 @@ import java.util.*;
  * Created by K on 2017. 7. 11..
  */
 public class UploadRequest {
-    private ResourceBundle msg = java.util.ResourceBundle.getBundle("message");
     private static Logger logger = LoggerFactory.getLogger(UploadRequest.class);
 
     private class UploadFile {
@@ -42,20 +41,20 @@ public class UploadRequest {
     private String saveDir;
 
     private Map<String, List<String>> formMap = new HashMap<String,List<String>>();
-
     private Map<String, UploadFile> fileMap = new LinkedHashMap<String, UploadFile>();
+    
     private String encodeType = "UTF-8";
 
     public UploadRequest(HttpServletRequest request, String saveDir, long maxSize, FileRenamePolicy renamePolicy) throws Exception {
         this.saveDir = saveDir;
 
         if(!ServletFileUpload.isMultipartContent(request)) {
-            throw new IllegalArgumentException(msg.getString("0016"));
+        	logger.info("! isMultipartContent");
         }
 
         //check boundary header:헤더에 boundary가 없으면 apache common fileupload에서 에러 발생
         if(!request.getHeader("Content-Type").matches(".*; ?boundary=.*")) {
-            throw new IllegalArgumentException(msg.getString("0017"));
+        	logger.info("! hasnot boundary");
         }
 
         FileUtil.checkMakeDir(saveDir);

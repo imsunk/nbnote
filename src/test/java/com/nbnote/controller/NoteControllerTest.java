@@ -1,21 +1,31 @@
 package com.nbnote.controller;
 
-import com.nbnote.db.DbHandler;
-import com.nbnote.model.Note;
-import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.test.JerseyTest;
-import org.junit.Assert;
-import org.junit.Test;
-
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.test.JerseyTest;
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.nbnote.conf.Configuration;
+import com.nbnote.db.DbHandler;
+import com.nbnote.model.Note;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 
 /**
  * Created by K on 2017. 6. 18..
@@ -68,6 +78,27 @@ public class NoteControllerTest extends JerseyTest{
         Assert.assertNotNull(response);
         Assert.assertEquals(200,response.getStatus());
     }
+    
+    @Test
+	public void uploadFileTest() throws IOException {
+    	String testFilePath = Configuration.getConf(Configuration.TEST_UPLOAD_FILE);
+    	
+		MultipartBody m = new MultipartBody.Builder().setType(MultipartBody.FORM)
+				.addFormDataPart("fileUpload", "testFile.txt", 
+						RequestBody.create(okhttp3.MediaType.parse("application/octet-stream"), new File(testFilePath))).build();
+
+		OkHttpClient okhttp = new OkHttpClient();
+		
+		String uploadUrl = Configuration.getConf(Configuration.SERVER_URI_ROOT)+"api/note/file";
+
+		Request request = new Request.Builder().url(Configuration.getConf(Configuration.SERVER_URI_ROOT)+"api/note/file").post(m).build();
+		okhttp3.Response res = okhttp.newCall(request).execute();
+
+
+		Assert.assertNotNull(res);
+		Assert.assertEquals(200, res.code());
+	}
+
 
     public Note getNote(int id){
         DbHandler conn = DbHandler.getInstance();

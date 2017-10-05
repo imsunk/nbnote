@@ -1,15 +1,14 @@
 package com.nbnote.util;
 
-public class PathUtil {
+import com.nbnote.conf.Configuration;
 
+public class PathUtil {
 	public static String userUploadTmpUrl(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return Configuration.getConf(Configuration.SERVER_URI_ROOT)+"file/"+name;
 	}
 
 	public static String userUploadTmpDir(String filename) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return "D:/web_app/"+Configuration.getConf(Configuration.IMAGE_TEMP_DIR);
 	}
-
 }
