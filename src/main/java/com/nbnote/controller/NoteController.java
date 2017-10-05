@@ -55,7 +55,7 @@ public class NoteController extends BaseController{
     public ArrayList<Note> getNoteList(@PathParam("userId")String userId){
         ArrayList<Note> noteList;
         noteList = noteService.getAllNote(userId);
-
+        
         return noteList;
     }
 
@@ -70,7 +70,7 @@ public class NoteController extends BaseController{
     }
 
     @PUT
-    @Path("/notes/{noteId}")
+    @Consumes("application/json")
     @Produces(MediaType.APPLICATION_JSON)
     public Response modNote(Note note, @PathParam("noteId")int id) {
         int result = noteService.modNote(note,id);

@@ -43,7 +43,7 @@ public class NoteControllerTest extends JerseyTest{
     @Test
     public void writeNoteTest(){
         Date date = new Date();
-        Note note = new Note(1,"test","laesunk",date,"sunny","21c","에덴농장","테스트입니다","무3개","3000","비료","20000");
+        Note note = new Note(1,"test","laesunk",date,"sunny","21c","에덴농장","테스트입니다","무3개",3000,"비료",20000);
         Entity<Note> noteEntity = Entity.entity(note, MediaType.APPLICATION_JSON_TYPE);
         Response response = target("/note").request().post(noteEntity);
         Assert.assertNotNull(response);
@@ -54,7 +54,7 @@ public class NoteControllerTest extends JerseyTest{
     @Test
     public void modNoteTest(){
         Date date = new Date();
-        Note note = new Note(1,"test","laesunk",date,"cloudy","21c","에덴농장","테스트입니다","무4개","3000","비료","20000");
+        Note note = new Note(1,"test","laesunk",date,"cloudy","21c","에덴농장","테스트입니다","무4개",3000,"비료",20000);
         Entity<Note> noteEntity = Entity.entity(note, MediaType.APPLICATION_JSON_TYPE);
         Response response = target("/note/notes/3").request().put(noteEntity);
         Assert.assertNotNull(response);
@@ -90,8 +90,8 @@ public class NoteControllerTest extends JerseyTest{
             note.setContent(rs.getString(8));
             note.setConsumeTitle(rs.getString(9));
             note.setIncomeTitle(rs.getString(10));
-            note.setConsume(rs.getString(11));
-            note.setIncome(rs.getString(12));
+            note.setConsume(rs.getInt(11));
+            note.setIncome(rs.getInt(12));
         } catch (SQLException e) {
             e.printStackTrace();
         }
