@@ -114,7 +114,7 @@ public class NoteController extends BaseController {
 		snsImageName = ImageUtil.makeThumbnail(tmp.getAbsolutePath());
 
 		result.setFilename(FilenameUtils.getName(snsImageName));
-		result.setFileUrl(PathUtil.userUploadTmpUrl(FilenameUtils.getName(snsImageName)).replaceAll("\\", "/"));
+		result.setFileUrl(PathUtil.userUploadTmpUrl(FilenameUtils.getName(snsImageName)));
 
 		return result;
 	}
