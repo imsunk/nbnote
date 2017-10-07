@@ -40,7 +40,7 @@ public class TokenSecurity {
         // when the token was issued/created (now)
         claims.setIssuedAtToNow();
         // time before which the token is not yet valid (2 minutes ago)
-        claims.setNotBeforeMinutesInThePast(2);
+        //claims.setNotBeforeMinutesInThePast(2);
         // transmit the user id for later authentication
         claims.setClaim( "id", id );
 

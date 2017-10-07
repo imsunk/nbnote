@@ -1,11 +1,15 @@
 package com.nbnote.model;
 
+import com.nbnote.response.JsonSerializable;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 /**
  * Created by K on 2017. 9. 3..
  */
-public class UserSecurity {
+public class UserSecurity implements JsonSerializable{
 
     private String token = null;
     private String role = null;
@@ -66,5 +70,17 @@ public class UserSecurity {
     @Override
     public String toString() {
         return "UserSecurity [id="+ this.getId() + ", role=" + role + ", token=" + token + "]";
+    }
+
+
+    @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put( "id", this.id );
+        jsonObject.put( "token", this.token );
+        jsonObject.put( "role", this.role );
+        jsonObject.put( "expire_time", this.expire_time );
+
+        return jsonObject;
     }
 }

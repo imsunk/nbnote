@@ -41,7 +41,7 @@ public class NoteController extends BaseController{
     private  NoteService noteService = new NoteService();
     private UploadPictureService upPictureSvc = new UploadPictureService();
 
-    @POST
+    @PUT
     @RolesAllowed({"user"})
     @Consumes("application/json")
     public Response writeNote(Note note){

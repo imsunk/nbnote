@@ -45,7 +45,7 @@ public class UserDAO extends Service{
         } finally {
             try {
                 ptmt.close();
-                conn.getConnection().close();
+                con.close();
             } catch (SQLException e){
                 logger.debug(e.getMessage());
             }
@@ -77,7 +77,7 @@ public class UserDAO extends Service{
             try {
                 rs.close();
                 ptmt.close();
-                conn.getConnection().close();
+                con.close();
             } catch (SQLException e){
                 logger.debug(e.getMessage());
             }
@@ -114,7 +114,7 @@ public class UserDAO extends Service{
             try {
                 rs.close();
                 ptmt.close();
-                conn.getConnection().close();
+                con.close();
             } catch (SQLException e) {
                 logger.debug(e.getMessage());
             }
@@ -152,7 +152,7 @@ public class UserDAO extends Service{
             try {
                 rs.close();
                 ptmt.close();
-                conn.getConnection().close();
+                con.close();
             } catch (SQLException e){
                 logger.debug(e.getMessage());
             }

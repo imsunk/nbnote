@@ -2,15 +2,18 @@ package com.nbnote.controller;
 
 import com.nbnote.db.DbHandler;
 import com.nbnote.model.Note;
+import com.nbnote.model.User;
+import com.nbnote.model.UserSecurity;
+import com.nbnote.service.TokenDAO;
+import com.nbnote.service.UserDAO;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +24,24 @@ import java.util.Date;
  * Created by K on 2017. 6. 18..
  */
 public class NoteControllerTest extends JerseyTest{
+    private TokenDAO tokenDao = new TokenDAO();
+    private UserDAO userDao = new UserDAO();
+
+
+    @Test
+    public void getToken() {
+        Response response;
+        MultivaluedMap<String, String> formData;
+        formData = new MultivaluedHashMap<String, String>();
+        formData.add("id", "laesunk");
+        String id = "laesunk";
+        response = target("/auth/").request().get();
+        Assert.assertEquals(200, response.getStatus());
+        UserSecurity userSec = response.readEntity(UserSecurity.class);
+        Assert.assertNotNull(userSec);
+        Assert.assertEquals(userSec.getId(),"laesunk");
+    }
+
     @Override
     protected Application configure() {
         return  new ResourceConfig(NoteController.class);
@@ -28,9 +49,9 @@ public class NoteControllerTest extends JerseyTest{
 
     @Test
     public void AllNoteListTest(){
-        Response response = target("/note/users/lskim").request().get();
+        Response response = target("/note/users/laesunk").request().get();
         Assert.assertNotNull(response);
-        Assert.assertEquals(200, response.getStatus());
+        System.out.println(response);
     }
 
     @Test

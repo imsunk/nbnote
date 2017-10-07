@@ -22,7 +22,6 @@ public class TokenDAO extends Service{
     public UserSecurity getUserAuthentication(String id ) throws UserNotFoundException {
         logger.debug( "getUserAuthentication: " + id );
 
-        PreparedStatement stmt = null;
         UserSecurity userSecurity = null;
         Connection con = conn.getConnection();
         ResultSet rs = null;
@@ -34,17 +33,12 @@ public class TokenDAO extends Service{
             ptmt.setString(1, id);
             rs = ptmt.executeQuery();
 
-            if(rs.getRow()>=1){
-
-            }
-
             if( rs.next() ) {
-                String password = rs.getString("password");
                 String token = rs.getString("token");
                 String role = rs.getString("role");
-                String expire_time = rs.getString("expire_time");
+                Date expire_time = rs.getDate("expire_date");
 
-                userSecurity = new UserSecurity( password, token, role );
+                userSecurity = new UserSecurity(id, token, role, expire_time );
             }
             else {
                 throw new UserNotFoundException( id );
@@ -56,7 +50,8 @@ public class TokenDAO extends Service{
         finally {
             try {
                 rs.close();
-                stmt.close();
+                ptmt.close();
+                con.close();
             } catch ( SQLException e ) {
                 logger.warn( e.getMessage() );
             }
@@ -83,7 +78,7 @@ public class TokenDAO extends Service{
         } finally {
             try {
                 ptmt.close();
-                conn.getConnection().close();
+                con.close();
             } catch (SQLException e) {
                 logger.debug(e.getMessage());
             }
@@ -113,7 +108,7 @@ public class TokenDAO extends Service{
         } finally {
             try {
                 ptmt.close();
-                conn.getConnection().close();
+                con.close();
             } catch (SQLException e){
                 logger.debug(e.getMessage());
             }

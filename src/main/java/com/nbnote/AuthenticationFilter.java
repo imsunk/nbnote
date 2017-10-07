@@ -20,7 +20,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
 import com.nbnote.service.TokenDAO;
-import org.apache.log4j.Logger;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import com.nbnote.service.UserDAO;
@@ -29,6 +28,8 @@ import com.nbnote.model.User;
 import com.nbnote.model.UserSecurity;
 import com.nbnote.response.ResponseBuilder;
 import com.nbnote.security.TokenSecurity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The AuthenticationFilter verifies the access permissions for a user based on the provided jwt token
@@ -39,7 +40,7 @@ import com.nbnote.security.TokenSecurity;
 @Priority( Priorities.AUTHENTICATION )
 public class AuthenticationFilter implements javax.ws.rs.container.ContainerRequestFilter
 {
-    final static Logger logger = Logger.getLogger( AuthenticationFilter.class );
+    final static Logger logger = LoggerFactory.getLogger( AuthenticationFilter.class );
 
     @Context
     private ResourceInfo resourceInfo;
