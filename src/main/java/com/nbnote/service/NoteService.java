@@ -22,7 +22,9 @@ public class NoteService extends Service{
 
     public ArrayList<Note> getAllNote(String userId){
        ArrayList<Note>  notes = new ArrayList<Note>();
-       StringBuilder query = new StringBuilder("select * from note where writer=?");
+       StringBuilder query = new StringBuilder("select id, title, writer, writeDate, weather, "
+       		+ "temperature, place, content, consumeTitle, consume, "
+       		+ "incomeTitle, income from note where writer=?");
        Connection con = conn.getConnection();
        ResultSet rs = null;
        PreparedStatement ptmt = null;
@@ -41,9 +43,10 @@ public class NoteService extends Service{
                 note.setPlace(rs.getString(7));
                 note.setContent(rs.getString(8));
                 note.setConsumeTitle(rs.getString(9));
-                note.setIncomeTitle(rs.getString(10));
-                note.setConsume(rs.getString(11));
-                note.setIncome(rs.getString(12));
+                note.setConsume(rs.getInt(10));
+                note.setIncomeTitle(rs.getString(11));
+                note.setIncome(rs.getInt(12));
+                
                 notes.add(note);
             }
         } catch (SQLException e) {
@@ -84,8 +87,8 @@ public class NoteService extends Service{
             note.setContent(rs.getString(8));
             note.setConsumeTitle(rs.getString(9));
             note.setIncomeTitle(rs.getString(10));
-            note.setConsume(rs.getString(11));
-            note.setIncome(rs.getString(12));
+            note.setConsume(rs.getInt(11));
+            note.setIncome(rs.getInt(12));
         } catch (SQLException e) {
             logger.debug(e.getMessage());
         } finally {
@@ -103,23 +106,23 @@ public class NoteService extends Service{
 
     public int writeNode(Note note) {
         StringBuilder query = new StringBuilder("insert into note(title, writer, writeDate, weather, temperature, place, content, " +
-                "consumeTitle, incomeTitle, consume, income) values (?,?,?,?,?,?,?,?,?,?,?)" );
+                "consumeTitle, incomeTitle, consume, income) values (?,?,now(),?,?,?,?,?,?,?,?)" );
         Connection con = conn.getConnection();
         PreparedStatement ptmt = null;
         try {
             ptmt = con.prepareStatement(query.toString());
             ptmt.setString(1,note.getTitle());
             ptmt.setString(2,note.getWriter());
-            ptmt.setTimestamp(3,new java.sql.Timestamp(note.getWriteDate().getTime()));
-            ptmt.setString(4,note.getWeather());
-            ptmt.setString(5,note.getTemperature());
-            ptmt.setString(6,note.getPlace());
-            ptmt.setString(7,note.getContent());
-            ptmt.setString(8,note.getConsumeTitle());
-            ptmt.setString(9,note.getIncomeTitle());
-            ptmt.setString(10,note.getConsume());
-            ptmt.setString(11,note.getIncome());
+            ptmt.setString(3,note.getWeather());
+            ptmt.setString(4,note.getTemperature());
+            ptmt.setString(5,note.getPlace());
+            ptmt.setString(6,note.getContent());
+            ptmt.setString(7,note.getConsumeTitle());
+            ptmt.setString(8,note.getIncomeTitle());
+            ptmt.setInt(9,note.getConsume());
+            ptmt.setInt(10,note.getIncome());
             ptmt.executeUpdate();
+
         } catch (SQLException e) {
             logger.debug(e.getMessage());
             return 1;
@@ -137,19 +140,20 @@ public class NoteService extends Service{
     }
 
     public int modNote(Note note,int id) {
-        StringBuilder query = new StringBuilder("update note set title=?, place=?, content=?, consumeTitle=?, incomeTitle=?, income=?, consume=? WHERE id=?");
+        StringBuilder query = new StringBuilder("update note set title=?, place=?, content=?, consumeTitle=?, incomeTitle=?, consume=?, income=? WHERE id=?;");
+
         Connection con = conn.getConnection();
         PreparedStatement ptmt = null;
         try {
-            ptmt = con.prepareStatement(query.toString());
+            ptmt = con.prepareStatement("update note set title=?, place=?, content=?, consumeTitle=?, incomeTitle=?, consume=?, income=? WHERE id=?;");
             ptmt.setString(1,note.getTitle());
             ptmt.setString(2,note.getPlace());
             ptmt.setString(3,note.getContent());
             ptmt.setString(4,note.getConsumeTitle());
             ptmt.setString(5,note.getIncomeTitle());
-            ptmt.setString(6,note.getIncome());
-            ptmt.setString(7,note.getConsume());
-            ptmt.setInt(8, id);
+            ptmt.setInt(6,note.getConsume());
+            ptmt.setInt(7,note.getIncome());
+            ptmt.setInt(8, note.getId());
 
             ptmt.executeUpdate();
         } catch (SQLException e) {
